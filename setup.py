@@ -96,7 +96,7 @@ setup(
         'ckanext': [
             ('**.py', 'python', None),
             ('**.js', 'javascript', None),
-            ('**/templates/**.html', 'ckan', None),
+            ('**/templates/**.jinja2', 'ckan', None),
         ],
     }
 )

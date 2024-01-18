@@ -133,7 +133,7 @@ class DataComparisonViewBase(p.SingletonPlugin):
         return {}
 
     def view_template(self, context, data_dict):
-        return 'datacomparison.html'
+        return 'datacomparison.jinja2'
 
 
 class DataComparisonView(DataComparisonViewBase):
@@ -318,5 +318,3 @@ class DataComparisonChartView(DataComparisonViewBase):
         else:
             return False
 
-    def form_template(self, context, data_dict):
-        return 'chart_form.html'
