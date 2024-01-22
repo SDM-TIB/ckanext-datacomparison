@@ -76,48 +76,80 @@ chart_builder.on('submit', function(event) {
 });
 
 let data_explorer = document.getElementById('data-explorer-comparison'),
-    data_package = JSON.parse(data_explorer.dataset.datapackage),
-    dataset_path = data_package['datapackage']['resources'][0]['path'];
+    data_package = JSON.parse(data_explorer.dataset.datapackage);
 
 let columns = null,
-    data_ = null;
+    data_ = [];
 const xAxis = document.getElementById('xAxis'),
       yAxis = document.getElementById('yAxis');
 
-// let uri_resource = "https://localhost:8443/api/3/action/" + "datastore_search?resource_id=".concat("cf70373f-3ee5-4ed8-ae12-e996cfa2dd02", "&limit=100")  // TODO: How to get the API URL and Resource ID
-$.ajax({
-    type: 'GET',
-    url: dataset_path,
-    crossDomain: true,
-    success: function(data) {
-        data_ = $.csv.toArrays(data);
-        columns = data_.shift();
+function setNumberRows(count) { $('#totalRows').text('Total rows: ' + count) }
 
-        $('#totalRows').text('Total rows: ' + data_.length)
+function loadData() {
+    let error = false;
+    if ('api' in data_package['datapackage']['resources'][0]) {
+        const request_url = data_package['datapackage']['resources'][0]['api'];
+        $.ajax({
+            async: false,
+            type: 'GET',
+            url: request_url,
+            crossDomain: true,
+            success: function(data) {
+                let records = data.result.records;
+                for (let i = 0; i < records.length; i++) {
+                    const record = records[i];
+                    let values = Object.values(record);
+                    values.shift();
+                    data_.push(values)
+                    if (i === 0) { columns = Object.keys(record); }
+                }
 
+                console.log('Data when loading from DataStore:')
+                console.log(data_)
+                console.log('*****')
+
+                columns.shift();  // removing the _id column
+            },
+            error: function(jqXHR, textStatus) {
+                error = true;
+                console.log(jqXHR.status);
+                console.log(jqXHR.responseText);
+                console.log(textStatus);
+            }
+        });
+    } else {
+        const dataset_path = data_package['datapackage']['resources'][0]['path'];
+        $.ajax({
+            async: false,
+            type: 'GET',
+            url: dataset_path,
+            crossDomain: true,
+            success: function(data) {
+                data_ = $.csv.toArrays(data);
+                columns = data_.shift();
+            },
+            error: function(jqXHR, textStatus) {
+                console.log(jqXHR.status);
+                console.log(jqXHR.responseText);
+                console.log(textStatus);
+            }
+        });
+    }
+
+    if (!error) {
         initChartBuilder();
-        /* Code for using the DataStore result
-        let records = data.result.records;
-        for (const i in records) {
-            const record = records[i];
-            data_.push(Object.values(record))
-            if (columns === null) { columns = Object.keys(record); }
-        } */
+        setNumberRows(data_.length);
+
         let colDef = [];
         for (const j in columns) { colDef.push({ title: columns[j] }) }
         new DataTable('#comparison-table', {
             dom: 'Qfrtip',
             columns: colDef,
-            //columnDefs: [{ target: 0, visible: false, searchable: false }],  // needed when using the DataStore
             data: data_
         });
-    },
-    error: function(jqXHR, textStatus) {
-        console.log(jqXHR.status);
-        console.log(jqXHR.responseText);
-        console.log(textStatus);
     }
-});
+}
+loadData();
 
 function initChartBuilder() {
     for (let i = 0; i < columns.length; i++) {
