@@ -129,6 +129,7 @@ function loadData() {
                 columns = data_.shift();
             },
             error: function(jqXHR, textStatus) {
+                error = true;
                 console.log(jqXHR.status);
                 console.log(jqXHR.responseText);
                 console.log(textStatus);
