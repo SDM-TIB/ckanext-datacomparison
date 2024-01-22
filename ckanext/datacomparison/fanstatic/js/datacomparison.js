@@ -144,7 +144,15 @@ chart_builder.on('submit', function(event) {
                 console.log('Sorry not yet implemented!');
         }
     }
-    Plotly.newPlot('gd', traces, {hovermode: 'x unified', xaxis: data_xAxis}, {displaylogo: false, responsive: true});
+    let layout = { hovermode: 'x unified', xaxis: data_xAxis };
+    if ($('#logScale').is(':checked')) {
+        layout['yaxis'] = {
+            type: 'log',
+            autorange: true
+        }
+    }
+
+    Plotly.newPlot('gd', traces, layout, { displaylogo: false, responsive: true });
 });
 
 let data_explorer = document.getElementById('data-explorer-comparison'),
@@ -237,7 +245,7 @@ function initChartBuilder() {
         label.classList.add('block', 'font-bold', 'text-white');
         let input = document.createElement('input');
         input.id = 'yAxis' + i;
-        input.classList.add('mr-2', 'leading-tight');
+        input.classList.add('ml-2', 'mr-2', 'leading-tight');
         input.type = 'checkbox';
         input.name = 'yAxis';
         input.value = column;
@@ -245,7 +253,7 @@ function initChartBuilder() {
             input.checked = true;
         }
         let span = document.createElement('span');
-        span.classList.add('text-xs', 'mr-2');
+        span.classList.add('text-xs');
         span.innerText = column;
         label.appendChild(input);
         label.appendChild(span);
