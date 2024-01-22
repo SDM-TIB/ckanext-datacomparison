@@ -104,10 +104,6 @@ function loadData() {
                     if (i === 0) { columns = Object.keys(record); }
                 }
 
-                console.log('Data when loading from DataStore:')
-                console.log(data_)
-                console.log('*****')
-
                 columns.shift();  // removing the _id column
             },
             error: function(jqXHR, textStatus) {
