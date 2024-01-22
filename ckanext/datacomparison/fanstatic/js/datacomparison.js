@@ -39,7 +39,6 @@ chart_builder.on('submit', function(event) {
 
         switch (chart_type) {
             case 'line':
-                console.log('creating line trace...')
                 traces.push({
                     x: data_xAxis,
                     y: arrayColumn(data_, dataset_idx),
@@ -53,7 +52,6 @@ chart_builder.on('submit', function(event) {
                 });
                 break;
             case 'scatter':
-                console.log('creating scatter trace...')
                 traces.push({
                     x: data_xAxis,
                     y: arrayColumn(data_, dataset_idx),
