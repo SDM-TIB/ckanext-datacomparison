@@ -22,6 +22,78 @@ function openTab(evt, tabName) {
 
 document.getElementById('defaultOpen').click();  // open default tab
 
+const new_resource = $('#dataset2');
+new_resource.on('submit', function(event) {
+    event.preventDefault();
+    const res2 = $('#res2').val();
+
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: res2,
+        crossDomain: true,
+        success: function(data) {
+            let data_new = $.csv.toArrays(data);
+            let columns_new = data_new.shift();
+
+            const intersection = columns.filter(value => columns_new.includes(value));
+            if (intersection.length === 1) {
+                const join_column = intersection[0],
+                    idx_old = columns.indexOf(join_column),
+                    idx_new = columns_new.indexOf(join_column),
+                    num_cols_old = columns.length - 1,
+                    num_cols_new = columns_new.length - 1;
+
+                let columns_copy = [...columns_new];
+                columns_copy.splice(idx_new, 1);
+                columns = columns.concat(columns_copy);
+
+                while (data_new.length > 0) {
+                    let found = false,
+                        record = data_new.shift();
+                    console.log(record);
+                    for (let i = 0; i < data_.length; i++) {
+                        if (record[idx_new] == data_[i][idx_old]) {
+                            found = true;
+                            record.splice(idx_new, 1);
+
+                            let length = record.length;
+                            while (length < num_cols_new) {
+                                record.push(null);
+                                length++;
+                            }
+
+                            data_[i] = data_[i].concat(record);
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        let record_old = Array(num_cols_old + 1).fill(null);
+                        record_old[idx_old] = record[idx_new];
+                        record.splice(idx_new, 1);
+                        record = record_old.concat(record);
+                        data_.push(record);
+                    }
+                }
+
+                const num_cols = num_cols_old + num_cols_new + 1;
+                for (let i = 0; i < data_.length; i++) {  // Take care of the old records which have not been updated yet...
+                    if (data_[i].length < num_cols) { data_[i] = data_[i].concat(Array(num_cols - data_[i].length).fill(null)) }
+                }
+
+                updateUI();
+            } else {
+                console.log('There is either no or several matching column(s).')
+            }
+        },
+        error: function(jqXHR, textStatus) {
+            console.log(jqXHR.status);
+            console.log(jqXHR.responseText);
+            console.log(textStatus);
+        }
+    });
+})
+
 const chart_builder = $('#chartBuilder');
 chart_builder.on('submit', function(event) {
     event.preventDefault();
@@ -133,20 +205,23 @@ function loadData() {
         });
     }
 
-    if (!error) {
-        initChartBuilder();
-        setNumberRows(data_.length);
-
-        let colDef = [];
-        for (const j in columns) { colDef.push({ title: columns[j] }) }
-        new DataTable('#comparison-table', {
-            dom: 'Qfrtip',
-            columns: colDef,
-            data: data_
-        });
-    }
+    if (!error) { updateUI()}
 }
 loadData();
+
+function updateUI() {
+    // TODO: needs to destroy previous iteration...
+    initChartBuilder();
+    setNumberRows(data_.length);
+
+    let colDef = [];
+    for (const j in columns) { colDef.push({ title: columns[j] }) }
+    new DataTable('#comparison-table', {
+        dom: 'Qfrtip',
+        columns: colDef,
+        data: data_
+    });
+}
 
 function initChartBuilder() {
     for (let i = 0; i < columns.length; i++) {
