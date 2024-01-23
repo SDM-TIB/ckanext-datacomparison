@@ -218,13 +218,18 @@ function loadData() {
 loadData();
 
 function updateUI() {
-    // TODO: needs to destroy previous iteration...
     initChartBuilder();
     setNumberRows(data_.length);
 
     let colDef = [];
     for (const j in columns) { colDef.push({ title: columns[j] }) }
+
+    if ($.fn.DataTable.isDataTable('#comparison-table')) {
+        $('#comparison-table').DataTable().clear().destroy();
+        $('#comparison-table').html('');
+    }
     new DataTable('#comparison-table', {
+        destroy: true,
         dom: 'Qfrtip',
         columns: colDef,
         data: data_
