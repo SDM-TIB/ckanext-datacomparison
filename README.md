@@ -7,7 +7,10 @@ This extension is inspired by the _Data Explorer React_ ([https://github.com/dat
 
 The main feature of `ckanext-datacomparison` is the capability to compare data across resources.
 
+## Changelog
+
+If you are interested in what has changed, check out the [changelog](CHANGELOG.md).
 
 ## License
 
-`ckanext-datacomparison` is licensed under AGPL-3.0.
+`ckanext-datacomparison` is licensed under AGPL-3.0, see the [license file](LICENSE.md).
