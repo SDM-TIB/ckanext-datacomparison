@@ -51,7 +51,6 @@ new_resource.on('submit', function(event) {
                 while (data_new.length > 0) {
                     let found = false,
                         record = data_new.shift();
-                    console.log(record);
                     for (let i = 0; i < data_.length; i++) {
                         if (record[idx_new] == data_[i][idx_old]) {
                             found = true;
