@@ -232,6 +232,9 @@ function updateUI() {
 }
 
 function initChartBuilder() {
+    $('#xAxis').empty();
+    yAxis.replaceChildren();
+
     for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
 
