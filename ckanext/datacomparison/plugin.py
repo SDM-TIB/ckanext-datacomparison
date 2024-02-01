@@ -1,7 +1,6 @@
 
 from logging import getLogger
 
-from ckan.common import json  # this is fine, there is ckan.common.json ...
 import ckan.plugins as p
 import ckan.plugins.toolkit as toolkit
 from ckan.lib.helpers import url_for
@@ -108,12 +107,15 @@ def in_list(list_possible_values):
     return validate
 
 
-class DataComparisonViewBase(p.SingletonPlugin):
+class DataComparisonView(p.SingletonPlugin):
+    """
+        This extension resources views using the datacomparison.
+    """
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IResourceView, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
-    
+
     # IConfigurable
     def configure(self, config):
         toolkit.add_resource('fanstatic', 'datacomparison')
@@ -124,22 +126,6 @@ class DataComparisonViewBase(p.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'datacomparison')
 
-    def can_view(self, data_dict):
-        resource = data_dict['resource']
-        return (resource.get('datastore_active') or
-                '_datastore_only_resource' in resource.get('url', ''))
-
-    def get_helpers(self):
-        return {}
-
-    def view_template(self, context, data_dict):
-        return 'datacomparison.jinja2'
-
-
-class DataComparisonView(DataComparisonViewBase):
-    """
-        This extension resources views using the datacomparison.
-    """
 
     def info(self):
         return {
@@ -182,139 +168,8 @@ class DataComparisonView(DataComparisonViewBase):
         else:
             return False
 
+    def get_helpers(self):
+        return {}
 
-class DataComparisonTableView(DataComparisonViewBase):
-    """
-        This extension provides table views using the datacomparison.
-    """
-
-    def info(self):
-        return {
-            'name': 'datacomparison_table_view',
-            'title': 'Table',
-            'filterable': False,
-            'icon': 'table',
-            'requires_datastore': False,
-            'default_title': p.toolkit._('Table'),
-        }
-
-    def setup_template_variables(self, context, data_dict):
-        schema = datastore_fields_to_schema(data_dict['resource'])
-        filters = data_dict['resource_view'].get('filters', {})
-
-        data_dict['resource'].update({
-            'schema': {'fields': schema},
-            'title': data_dict['resource']['name'],
-            'path': data_dict['resource']['url'],
-            'api': url_for('api.action', ver=3, logic_function='datastore_search', resource_id=data_dict['resource']['id'], filters=json.dumps(filters), _external=True),
-        })
-
-        datapackage = {'resources': [data_dict['resource']]}
-
-        return {
-            'resource_view': data_dict['resource_view'],
-            'datapackage':  datapackage
-        }
-
-    def can_view(self, data_dict):
-        resource = data_dict['resource']
-
-        if (resource.get('datastore_active') or
-                '_datastore_only_resource' in resource.get('url', '')):
-            return True
-        resource_format = resource.get('format', None)
-        if resource_format:
-            return resource_format.lower() in ['csv', 'xls', 'xlsx', 'tsv']
-        else:
-            return False
-
-
-class DataComparisonChartView(DataComparisonViewBase):
-    """
-    This extension provides chart views using the datacomparison.
-    """
-    chart_types = [{'value': 'bar', 'text': 'Bar'},
-                   {'value': 'line', 'text': 'Line'}]
-
-    datastore_schema = []
-    datastore_field_types = ['number', 'integer', 'datetime', 'date', 'time']
-
-    def list_chart_types(self):
-        return [t['value'] for t in self.chart_types]
-
-    def list_schema_fields(self):
-        return [t['name'] for t in self.datastore_schema]
-
-    def info(self):
-        schema = {
-            'offset': [ignore_empty, natural_number_validator],
-            'limit': [ignore_empty, natural_number_validator],
-            'chart_type': [ignore_empty, in_list(self.list_chart_types)],
-            'group': [ignore_empty, in_list(self.list_schema_fields)],
-            'chart_series': [ignore_empty]
-        }
-
-        return {
-            'name': 'datacomparison_chart_view',
-            'title': 'Chart',
-            'filterable': False,
-            'icon': 'bar-chart-o',
-            'requires_datastore': False,
-            'schema': schema,
-            'default_title': p.toolkit._('Chart'),
-        }
-
-    def setup_template_variables(self, context, data_dict):
-        spec = {}
-        chart_type = data_dict['resource_view'].get('chart_type', False)
-        group = data_dict['resource_view'].get('group', False)
-        chart_series = data_dict['resource_view'].get('chart_series', False)
-        if chart_type:
-            spec.update({'type': chart_type})
-        if group:
-            spec.update({'group': group})
-        if chart_series:
-            spec.update({'series': chart_series if isinstance(
-                chart_series, list) else [chart_series]})
-
-        filters = data_dict['resource_view'].get('filters', {})
-        limit = data_dict['resource_view'].get('limit', 100)
-        offset = data_dict['resource_view'].get('offset', 0)
-
-        self.datastore_schema = datastore_fields_to_schema(
-            data_dict['resource'])
-
-        data_dict['resource'].update({
-            'schema': {'fields': self.datastore_schema},
-            'title': data_dict['resource']['name'],
-            'path': data_dict['resource']['url'],
-            'api': url_for('api.action', ver=3, logic_function='datastore_search', resource_id=data_dict['resource']['id'],
-                           filters=json.dumps(filters), limit=limit, offset=offset, _external=True),
-        })
-
-        datapackage = {'resources': [data_dict['resource']]}
-        groups = valid_fields_as_options(
-            self.datastore_schema)
-        chart_series = valid_fields_as_options(
-            self.datastore_schema, self.datastore_field_types)
-
-        return {
-            'resource_view': data_dict['resource_view'],
-            'datapackage':  datapackage,
-            'chart_types':  self.chart_types,
-            'chart_series': chart_series,
-            'groups': groups,
-        }
-
-    def can_view(self, data_dict):
-        resource = data_dict['resource']
-
-        if (resource.get('datastore_active') or
-                '_datastore_only_resource' in resource.get('url', '')):
-            return True
-        resource_format = resource.get('format', None)
-        if resource_format:
-            return resource_format.lower() in ['csv', 'xls', 'xlsx', 'tsv']
-        else:
-            return False
-
+    def view_template(self, context, data_dict):
+        return 'datacomparison.jinja2'

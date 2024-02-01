@@ -81,8 +81,6 @@ setup(
     entry_points='''
         [ckan.plugins]
         datacomparison_view=ckanext.datacomparison.plugin:DataComparisonView
-        datacomparison_table_view=ckanext.datacomparison.plugin:DataComparisonTableView
-        datacomparison_chart_view=ckanext.datacomparison.plugin:DataComparisonChartView
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan
