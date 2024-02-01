@@ -107,9 +107,43 @@ def in_list(list_possible_values):
     return validate
 
 
+def can_view_resource(data_dict):
+    resource = data_dict['resource']
+
+    if (resource.get('datastore_active') or
+            '_datastore_only_resource' in resource.get('url', '')):
+        return True
+    resource_format = resource.get('format', None)
+    if resource_format:
+        return resource_format.lower() in ['csv', 'xls', 'xlsx', 'tsv']
+    else:
+        return False
+
+
+def _setup_template_variables(context, data_dict):
+    data_dict['resource'].update({
+        'title': data_dict['resource']['name'],
+        'path': data_dict['resource']['url'],
+    })
+
+    if data_dict['resource'].get('datastore_active'):
+        schema = datastore_fields_to_schema(data_dict['resource'])
+        data_dict['resource'].update({
+            'schema': {'fields': schema},
+            'api': url_for('api.action', ver=3, logic_function='datastore_search',
+                           resource_id=data_dict['resource']['id'], _external=True),
+        })
+
+    datapackage = {'resources': [data_dict['resource']]}
+
+    return {
+        'resource_view': data_dict['resource_view'],
+        'datapackage': datapackage
+    }
+
 class DataComparisonView(p.SingletonPlugin):
     """
-        This extension resources views using the datacomparison.
+        This extension provides views capable of comparing resources.
     """
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
@@ -126,7 +160,6 @@ class DataComparisonView(p.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'datacomparison')
 
-
     def info(self):
         return {
             'name': 'datacomparison_view',
@@ -137,39 +170,54 @@ class DataComparisonView(p.SingletonPlugin):
         }
 
     def setup_template_variables(self, context, data_dict):
-        data_dict['resource'].update({
-            'title': data_dict['resource']['name'],
-            'path': data_dict['resource']['url'],
-        })
-        
-        if data_dict['resource'].get('datastore_active'):
-            schema = datastore_fields_to_schema(data_dict['resource'])
-            data_dict['resource'].update({
-              'schema': {'fields': schema},
-              'api': url_for('api.action', ver=3, logic_function='datastore_search', resource_id=data_dict['resource']['id'], _external=True),
-            })
-
-        datapackage = {'resources': [data_dict['resource']]}
-
-        return {
-            'resource_view': data_dict['resource_view'],
-            'datapackage':  datapackage
-        }
+        return _setup_template_variables(context, data_dict)
 
     def can_view(self, data_dict):
-        resource = data_dict['resource']
-
-        if (resource.get('datastore_active') or
-                '_datastore_only_resource' in resource.get('url', '')):
-            return True
-        resource_format = resource.get('format', None)
-        if resource_format:
-            return resource_format.lower() in ['csv', 'xls', 'xlsx', 'tsv']
-        else:
-            return False
+        return can_view_resource(data_dict)
 
     def get_helpers(self):
         return {}
 
     def view_template(self, context, data_dict):
         return 'datacomparison.jinja2'
+
+
+class DataExplorerView(p.SingletonPlugin):
+    """
+        This extension provides a simple data explorer for a single resource.
+    """
+    p.implements(p.IConfigurable, inherit=True)
+    p.implements(p.IConfigurer, inherit=True)
+    p.implements(p.IResourceView, inherit=True)
+    p.implements(p.ITemplateHelpers, inherit=True)
+
+    # IConfigurable
+    def configure(self, config):
+        toolkit.add_resource('fanstatic', 'datacomparison')
+
+    # IConfigurer
+    def update_config(self, config_):
+        toolkit.add_template_directory(config_, 'templates')
+        toolkit.add_public_directory(config_, 'public')
+        toolkit.add_resource('fanstatic', 'datacomparison')
+
+    def info(self):
+        return {
+            'name': 'datacomparison_explorer_view',
+            'title': 'DataExplorerSDM',
+            'icon': 'table',
+            'requires_datastore': False,
+            'default_title': p.toolkit._('Data Explorer (TIB-SDM)'),
+        }
+
+    def setup_template_variables(self, context, data_dict):
+        return _setup_template_variables(context, data_dict)
+
+    def can_view(self, data_dict):
+        return can_view_resource(data_dict)
+
+    def get_helpers(self):
+        return {}
+
+    def view_template(self, context, data_dict):
+        return 'dataexplorer.jinja2'
