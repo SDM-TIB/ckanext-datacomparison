@@ -25,7 +25,9 @@ document.getElementById('defaultOpen').click();  // open default tab
 const new_resource = $('#dataset2');
 new_resource.on('submit', function(event) {
     event.preventDefault();
-    const res2 = $('#res2').val();
+    const res2 = $('#res2').val(),
+          res2label = ' (' + $('#res2label').val() + ')',
+          res1label = ' (' + $('#res1label').val() + ')';
 
     $.ajax({
         async: false,
@@ -35,7 +37,7 @@ new_resource.on('submit', function(event) {
         success: function(data) {
             let data_new = $.csv.toArrays(data);
             let columns_new = data_new.shift();
-            for (let i = 1; i < columns_new.length; i++) { columns_new[i] = columns_new[i] + ' (Data Set 2)' }
+            for (let i = 1; i < columns_new.length; i++) { columns_new[i] = columns_new[i] + res2label }
 
             const intersection = columns.filter(value => columns_new.includes(value));
             if (1 === 1) {
@@ -47,7 +49,7 @@ new_resource.on('submit', function(event) {
 
                 let columns_copy = [...columns_new];
                 columns_copy.splice(idx_new, 1);
-                for (let i = 1; i < columns.length; i++) { columns[i] = columns[i] + ' (Data Set 1)' }
+                for (let i = 1; i < columns.length; i++) { columns[i] = columns[i] + res1label }
                 columns = columns.concat(columns_copy);
 
                 while (data_new.length > 0) {
