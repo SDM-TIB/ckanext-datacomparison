@@ -35,17 +35,19 @@ new_resource.on('submit', function(event) {
         success: function(data) {
             let data_new = $.csv.toArrays(data);
             let columns_new = data_new.shift();
+            for (let i = 1; i < columns_new.length; i++) { columns_new[i] = columns_new[i] + ' (Data Set 2)' }
 
             const intersection = columns.filter(value => columns_new.includes(value));
-            if (intersection.length === 1) {
+            if (1 === 1) {
                 const join_column = intersection[0],
-                    idx_old = columns.indexOf(join_column),
-                    idx_new = columns_new.indexOf(join_column),
+                    idx_old = 0, //columns.indexOf(join_column),
+                    idx_new = 0, //columns_new.indexOf(join_column),
                     num_cols_old = columns.length - 1,
                     num_cols_new = columns_new.length - 1;
 
                 let columns_copy = [...columns_new];
                 columns_copy.splice(idx_new, 1);
+                for (let i = 1; i < columns.length; i++) { columns[i] = columns[i] + ' (Data Set 1)' }
                 columns = columns.concat(columns_copy);
 
                 while (data_new.length > 0) {
