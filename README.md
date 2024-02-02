@@ -7,6 +7,10 @@ This extension is inspired by the _Data Explorer React_ ([https://github.com/dat
 
 The main feature of `ckanext-datacomparison` is the capability to compare data across resources.
 
+The following view plugins are part of `ckanext-datacomparison`:
+- `datacomparison_view` the view plugin providing the feature of comparing data across resources
+- `datacomparison_explorer_view` a view plugin acting like the _Data Explorer_ using the same code basis as the comparison view
+
 ## Changelog
 
 If you are interested in what has changed, check out the [changelog](CHANGELOG.md).
