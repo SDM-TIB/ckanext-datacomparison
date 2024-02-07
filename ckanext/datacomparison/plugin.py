@@ -152,13 +152,13 @@ class DataComparisonView(p.SingletonPlugin):
 
     # IConfigurable
     def configure(self, config):
-        toolkit.add_resource('fanstatic', 'datacomparison')
+        toolkit.add_resource('static', 'datacomparison')
 
     # IConfigurer
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'datacomparison')
+        toolkit.add_resource('static', 'datacomparison')
 
     def info(self):
         return {
@@ -193,13 +193,13 @@ class DataExplorerView(p.SingletonPlugin):
 
     # IConfigurable
     def configure(self, config):
-        toolkit.add_resource('fanstatic', 'datacomparison')
+        toolkit.add_resource('static', 'datacomparison')
 
     # IConfigurer
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'datacomparison')
+        toolkit.add_resource('static', 'datacomparison')
 
     def info(self):
         return {
