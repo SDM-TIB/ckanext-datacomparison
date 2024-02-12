@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/SDM-TIB/ckanext-dataexplorer-TIB',
+    url='https://github.com/SDM-TIB/ckanext-datacomparison',
 
     # Author details
     author='''Philipp D. Rohde''',
