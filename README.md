@@ -6,6 +6,7 @@
 This extension is inspired by the _Data Explorer React_ ([https://github.com/datopian/ckanext-dataexplorer-react](https://github.com/datopian/ckanext-dataexplorer-react)).
 
 The main feature of `ckanext-datacomparison` is the capability to compare data across resources.
+The visualizations are powered by [plotly.js](https://github.com/plotly/plotly.js/).
 
 The following view plugins are part of `ckanext-datacomparison`:
 - `datacomparison_view` the view plugin providing the feature of comparing data across resources
