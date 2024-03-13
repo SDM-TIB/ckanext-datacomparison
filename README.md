@@ -12,6 +12,18 @@ The following view plugins are part of `ckanext-datacomparison`:
 - `datacomparison_view` the view plugin providing the feature of comparing data across resources
 - `datacomparison_explorer_view` a view plugin acting like the _Data Explorer_ using the same code basis as the comparison view
 
+## Installation
+
+As usual for CKAN extensions, you can install `ckanext-fedorkg` as follows:
+
+```bash
+git clone git@github.com:SDM-TIB/ckanext-datacomparison.git
+pip install -e ./ckanext-datacomparison
+pip install -r ./ckanext-fedorkg/requirements.txt
+```
+
+Afterward, add `datacomparison_view` and/or `datacomparison_explorer_view` to the plugins in your `ckan.ini`.
+
 ## Changelog
 
 If you are interested in what has changed, check out the [changelog](CHANGELOG.md).
