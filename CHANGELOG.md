@@ -1,5 +1,10 @@
 # Changelog
 
+# v0.3.0 - 2024-03-14
+- Enable comparisons for more than two resources
+- Update dependencies
+- Fix project homepage URL
+
 # v0.2.0 - 2024-02-02
 - Add feature to label the compared resources
 - Add view plugin acting as Data Explorer
