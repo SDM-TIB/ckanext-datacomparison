@@ -135,3 +135,17 @@ body, html {
 .js-plotly-plot .plotly .modebar-group {
   padding-left: 12px !important;
 }
+
+.required:after {
+  content: ' *';
+  color: red;
+}
+
+.rounded-input {
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+input:disabled {
+  background-color: #e7e7e7;
+}

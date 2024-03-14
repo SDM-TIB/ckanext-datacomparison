@@ -12,6 +12,9 @@ The following view plugins are part of `ckanext-datacomparison`:
 - `datacomparison_view` the view plugin providing the feature of comparing data across resources
 - `datacomparison_explorer_view` a view plugin acting like the _Data Explorer_ using the same code basis as the comparison view
 
+> [!NOTE]
+> The current version of `datacomparison_explorer_view` uses the first column of each resource for merging the data.
+
 ## Installation
 
 As usual for CKAN extensions, you can install `ckanext-fedorkg` as follows:

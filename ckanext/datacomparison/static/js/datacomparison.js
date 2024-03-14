@@ -1,4 +1,6 @@
-const arrayColumn = (arr, n) => arr.map(x => x[n]);
+const arrayColumn = (arr, n) => arr.map(x => x[n]),
+      classes_label = ['mr-2', 'text-xs', 'required'],
+      classes_input_resources = ['mr-4', 'rounded-input'];
 
 function openTab(evt, tabName) {
     let i, tabcontent, tablinks;
@@ -22,22 +24,77 @@ function openTab(evt, tabName) {
 
 document.getElementById('defaultOpen').click();  // open default tab
 
-const new_resource = $('#dataset2');
+function createLabel(text, htmlFor, classes) {
+    let label = document.createElement('label');
+    label.innerText = text;
+    label.htmlFor = htmlFor;
+    DOMTokenList.prototype.add.apply(label.classList, classes);
+    return label
+}
+
+function createInput(id_, type, placeholder, classes, required, size) {
+    let input = document.createElement('input');
+    DOMTokenList.prototype.add.apply(input.classList, classes);
+    input.type = type;
+    input.id = id_;
+    input.name = id_;
+    if (size !== null) {
+        input.size = size;
+    }
+    input.placeholder = placeholder;
+    input.required = required;
+    return input
+}
+function addNewResourceForm() {
+    num_resources += 1;
+    const submit_btn = $('#dataset_submit');
+    submit_btn.remove();
+
+    for (let i = 2; i < num_resources; i++) {
+        // prevent changes to previous resources since they would be ignored
+        $('#res' + i + 'label').prop('disabled', 'true');
+        if (i > 1) { $('#res' + i).prop('disabled', 'true') }
+    }
+
+    const new_label_id = 'res' + num_resources + 'label',
+          new_url_id = 'res' + num_resources;
+
+    new_resource.append(document.createElement('br'));
+    new_resource.append(document.createElement('br'));
+    let heading = document.createElement('b');
+    heading.innerText = 'Resource ' + num_resources;
+    new_resource.append(heading);
+    new_resource.append(document.createElement('br'));
+    new_resource.append(createLabel('Label:', new_label_id, classes_label));
+    new_resource.append(createInput(new_label_id, 'text', 'name', classes_input_resources, true, 12));
+    new_resource.append(createLabel('URL:', new_url_id, classes_label));
+    new_resource.append(createInput(new_url_id, 'text', 'URL for file', classes_input_resources, true, 80));
+    new_resource.append(submit_btn);
+}
+
+let num_resources = 2;
+const new_resource = $('#datasets');
 new_resource.on('submit', function(event) {
     event.preventDefault();
-    const res2 = $('#res2').val(),
-          res2label = ' (' + $('#res2label').val() + ')',
-          res1label = ' (' + $('#res1label').val() + ')';
+
+    if (num_resources === 2) {
+        const elem_res1_label = $('#res1label'),
+              res1_label = ' (' + elem_res1_label.val() + ')';
+        for (let i = 1; i < columns.length; i++) { columns[i] = columns[i] + res1_label }
+        elem_res1_label.prop('disabled', 'true');
+    }
+    const res_new = $('#res' + num_resources).val(),
+          res_new_label = ' (' + $('#res' + num_resources + 'label').val() + ')';
 
     $.ajax({
         async: false,
         type: 'GET',
-        url: res2,
+        url: res_new,
         crossDomain: true,
         success: function(data) {
             let data_new = $.csv.toArrays(data);
             let columns_new = data_new.shift();
-            for (let i = 1; i < columns_new.length; i++) { columns_new[i] = columns_new[i] + res2label }
+            for (let i = 1; i < columns_new.length; i++) { columns_new[i] = columns_new[i] + res_new_label }
 
             const intersection = columns.filter(value => columns_new.includes(value));
             if (1 === 1) {
@@ -49,7 +106,6 @@ new_resource.on('submit', function(event) {
 
                 let columns_copy = [...columns_new];
                 columns_copy.splice(idx_new, 1);
-                for (let i = 1; i < columns.length; i++) { columns[i] = columns[i] + res1label }
                 columns = columns.concat(columns_copy);
 
                 while (data_new.length > 0) {
@@ -84,7 +140,7 @@ new_resource.on('submit', function(event) {
                     if (data_[i].length < num_cols) { data_[i] = data_[i].concat(Array(num_cols - data_[i].length).fill(null)) }
                 }
 
-                updateUI();
+                addNewResourceForm();
             } else {
                 console.log('There is either no or several matching column(s).')
             }
@@ -95,6 +151,7 @@ new_resource.on('submit', function(event) {
             console.log(textStatus);
         }
     });
+    updateUI();
 })
 
 const chart_builder = $('#chartBuilder');
@@ -228,8 +285,9 @@ function updateUI() {
     for (const j in columns) { colDef.push({ title: columns[j] }) }
 
     if ($.fn.DataTable.isDataTable('#comparison-table')) {
-        $('#comparison-table').DataTable().clear().destroy();
-        $('#comparison-table').html('');
+        const comparison_table = $('#comparison-table');
+        comparison_table.DataTable().clear().destroy();
+        comparison_table.html('');
     }
     new DataTable('#comparison-table', {
         destroy: true,
