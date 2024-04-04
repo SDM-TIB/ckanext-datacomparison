@@ -68,12 +68,17 @@ function addNewResourceForm() {
     new_resource.append(createLabel('Label:', new_label_id, classes_label));
     new_resource.append(createInput(new_label_id, 'text', 'name', classes_input_resources, true, 12));
     new_resource.append(createLabel('URL:', new_url_id, classes_label));
-    new_resource.append(createInput(new_url_id, 'text', 'URL for file', classes_input_resources, true, 80));
+    let input_url = createInput(new_url_id, 'text', 'URL for file', classes_input_resources, true, 80);
+    input_url.setAttribute('list', 'resource_list');
+    input_url.oninput = function() { return populateSearchBar($(this).val()) };
+    new_resource.append(input_url);
     new_resource.append(submit_btn);
 }
 
 let num_resources = 2;
 const new_resource = $('#datasets');
+let resource_list = $('#resource_list');
+$('#res2').on('input', function() { return populateSearchBar($(this).val()) });
 new_resource.on('submit', function(event) {
     event.preventDefault();
 
@@ -328,6 +333,39 @@ function initChartBuilder() {
         label.appendChild(span);
         yAxis.appendChild(label);
     }
+}
+
+let resource_data = [];
+function getResourcesByName(name) {
+    resource_data = [];
+    if (name.length < 3) { return; }  // start searching for resources from three letters
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: 'https://localhost:8443/api/3/action/resource_search?query=name:' + name,
+        success: function (data) {
+            if (data['success']) { resource_data = data['result']['results']; }
+        },
+        error: function (jqXHR, textStatus) {
+            console.log(jqXHR.status);
+            console.log(jqXHR.responseText);
+            console.log(textStatus);
+        }
+    });
+}
+
+function populateSearchBar(name) {
+    resource_list.empty();
+    getResourcesByName(name);
+    console.log(resource_data)
+
+    resource_data.forEach((res) => {
+        let option = document.createElement('option');
+        option.value = res['url'];
+        option.innerText = res['name'];
+        if (res['description']) { option.innerText += ': ' + res['description'] }
+        resource_list.append(option);
+    })
 }
 
 //console.log(window.parent.document.getElementsByClassName("ckanext-datapreview"))
