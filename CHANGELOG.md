@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.4.0 - 2024-04-04
+- Enable searching for resources by their name
+- Fix alignment for resources 1 and 2 to match the following resources
+
 # v0.3.0 - 2024-03-14
 - Enable comparisons for more than two resources
 - Update dependencies
