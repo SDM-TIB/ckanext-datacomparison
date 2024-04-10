@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.4.1 - 2024-04-10
+- Fix API URL
+
 # v0.4.0 - 2024-04-04
 - Enable searching for resources by their name
 - Fix alignment for resources 1 and 2 to match the following resources
