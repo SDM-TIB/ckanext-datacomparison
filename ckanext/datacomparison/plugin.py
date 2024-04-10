@@ -134,11 +134,9 @@ def _setup_template_variables(context, data_dict):
                            resource_id=data_dict['resource']['id'], _external=True),
         })
 
-    datapackage = {'resources': [data_dict['resource']]}
-
     return {
-        'resource_view': data_dict['resource_view'],
-        'datapackage': datapackage
+        'api': url_for('api.action', ver=3, logic_function='resource_search', _external=True),
+        'resources': [data_dict['resource']]
     }
 
 class DataComparisonView(p.SingletonPlugin):

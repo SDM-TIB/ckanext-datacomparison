@@ -232,8 +232,8 @@ function setNumberRows(count) { $('#totalRows').text('Total rows: ' + count) }
 
 function loadData() {
     let error = false;
-    if ('api' in data_package['datapackage']['resources'][0]) {
-        const request_url = data_package['datapackage']['resources'][0]['api'];
+    if ('api' in data_package['resources'][0]) {
+        const request_url = data_package['resources'][0]['api'];
         $.ajax({
             async: false,
             type: 'GET',
@@ -259,7 +259,7 @@ function loadData() {
             }
         });
     } else {
-        const dataset_path = data_package['datapackage']['resources'][0]['path'];
+        const dataset_path = data_package['resources'][0]['path'];
         $.ajax({
             async: false,
             type: 'GET',
@@ -342,7 +342,7 @@ function getResourcesByName(name) {
     $.ajax({
         async: false,
         type: 'GET',
-        url: 'https://localhost:8443/api/3/action/resource_search?query=name:' + name,
+        url: data_package['api'] + '?query=name:' + name,
         success: function (data) {
             if (data['success']) { resource_data = data['result']['results']; }
         },
