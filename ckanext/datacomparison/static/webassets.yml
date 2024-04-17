@@ -9,9 +9,9 @@ main:
   output: datacomparison/%(version)s_datacomparison.js
   extra:
     preload:
+      - base/main
       - datacomparison/main-css
   contents:
-    - js/jquery-3.7.0.min.js
     - js/dataTables-2.0.4.min.js
     - js/dataTables.searchBuilder-1.7.1.min.js
     - js/jquery.csv-1.0.21.min.js
