@@ -1,5 +1,10 @@
 # Changelog
 
+# v0.4.2 - 2024-04-17
+- Update dependencies
+- Use jQuery from CKAN instance
+- Adjust height of iFrame when using the SearchBuilder
+
 # v0.4.1 - 2024-04-10
 - Fix API URL
 
