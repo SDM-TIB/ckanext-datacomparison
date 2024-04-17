@@ -298,7 +298,17 @@ function updateUI() {
         destroy: true,
         dom: 'Qfrtip',
         columns: colDef,
-        data: data_
+        data: data_,
+        searchBuilder: {
+            filterChanged: function() {
+                let iframe = window.parent.document.getElementsByClassName('ckanext-datapreview').item(0).children.item(1),
+                    group = document.getElementsByClassName('dtsb-group').item(0),
+                    group_height = getComputedStyle(group).height.slice(0, -2),
+                    btn = document.getElementsByClassName('dtsb-add').item(0),
+                    btn_height = getComputedStyle(btn).height.slice(0, -2);
+                iframe.style.height = (1000 + (group_height - btn_height)) + 'px';
+            }
+        }
     });
 }
 
@@ -367,8 +377,3 @@ function populateSearchBar(name) {
         resource_list.append(option);
     })
 }
-
-//console.log(window.parent.document.getElementsByClassName("ckanext-datapreview"))
-//console.log(window.parent.document.getElementsByClassName("ckanext-datapreview").item(0))
-//console.log(window.parent.document.getElementsByClassName("ckanext-datapreview").item(0).children.item(1).height = '1000px')
-// TODO: This is how we can access the iframe and change its height if necessary. It seems that the autofit for the size (setting the style of the iframe) is triggered randomly
