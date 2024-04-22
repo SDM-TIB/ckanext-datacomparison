@@ -9,7 +9,7 @@ main:
   output: datacomparison/%(version)s_dataexplorer.js
   extra:
     preload:
-      - base/main
+      - vendor/jquery
       - datacomparison/main-css
   contents:
     - js/dataTables-2.0.4.min.js
@@ -22,7 +22,7 @@ comparison:
   output: datacomparison/%(version)s_datacomparison.js
   extra:
     preload:
-      - base/main
+      - vendor/jquery
       - datacomparison/main-css
       - datacomparison/main
   contents:
