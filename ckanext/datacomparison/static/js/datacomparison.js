@@ -390,7 +390,6 @@ function getResourcesByName(name) {
 function populateSearchBar(name) {
     resource_list.empty();
     getResourcesByName(name);
-    console.log(resource_data)
 
     resource_data.forEach((res) => {
         let option = document.createElement('option');
