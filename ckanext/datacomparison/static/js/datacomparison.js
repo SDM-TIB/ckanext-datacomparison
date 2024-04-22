@@ -1,6 +1,10 @@
 const arrayColumn = (arr, n) => arr.map(x => x[n]),
       classes_label = ['mr-2', 'text-xs', 'required'],
-      classes_input_resources = ['mr-4', 'rounded-input'];
+      classes_input_resources = ['mr-4', 'rounded-input'],
+      details = document.getElementById('details-comparison');
+
+let height_details = getHeight(details),
+    height_searchBuilder;
 
 function openTab(evt, tabName) {
     let i, tabcontent, tablinks;
@@ -45,6 +49,25 @@ function createInput(id_, type, placeholder, classes, required, size) {
     input.required = required;
     return input
 }
+
+function getHeight(element) {
+    return parseFloat(getComputedStyle(element).height.slice(0, -2))
+}
+
+function updateIFrameHeight(difference) {
+    let iframe = window.parent.document.getElementsByClassName('ckanext-datapreview').item(0).children.item(1),
+        iframe_height = getHeight(iframe);
+    iframe.style.height = (iframe_height + difference) + 'px';
+}
+
+function details_height_update() {
+    let height_details_new = getHeight(details);
+    updateIFrameHeight(height_details_new - height_details);
+    height_details = height_details_new;
+}
+
+details.addEventListener('toggle', details_height_update);
+
 function addNewResourceForm() {
     num_resources += 1;
     const submit_btn = $('#dataset_submit');
@@ -73,6 +96,8 @@ function addNewResourceForm() {
     input_url.oninput = function() { return populateSearchBar($(this).val()) };
     new_resource.append(input_url);
     new_resource.append(submit_btn);
+
+    details_height_update();
 }
 
 let num_resources = 2;
@@ -278,7 +303,8 @@ function loadData() {
         });
     }
 
-    if (!error) { updateUI()}
+    if (!error) { updateUI() }
+    height_searchBuilder = getHeight(document.getElementsByClassName('dtsb-group').item(0));
 }
 loadData();
 
@@ -301,12 +327,9 @@ function updateUI() {
         data: data_,
         searchBuilder: {
             filterChanged: function() {
-                let iframe = window.parent.document.getElementsByClassName('ckanext-datapreview').item(0).children.item(1),
-                    group = document.getElementsByClassName('dtsb-group').item(0),
-                    group_height = getComputedStyle(group).height.slice(0, -2),
-                    btn = document.getElementsByClassName('dtsb-add').item(0),
-                    btn_height = getComputedStyle(btn).height.slice(0, -2);
-                iframe.style.height = (1000 + (group_height - btn_height)) + 'px';
+                let height_searchBuilder_new = getHeight(document.getElementsByClassName('dtsb-group').item(0));
+                updateIFrameHeight(height_searchBuilder_new - height_searchBuilder);
+                height_searchBuilder = height_searchBuilder_new;
             }
         }
     });
