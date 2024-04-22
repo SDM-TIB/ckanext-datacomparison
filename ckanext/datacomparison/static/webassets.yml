@@ -6,7 +6,7 @@ main-css:
     - css/datacomparison-custom.css
 
 main:
-  output: datacomparison/%(version)s_datacomparison.js
+  output: datacomparison/%(version)s_dataexplorer.js
   extra:
     preload:
       - base/main
@@ -16,4 +16,14 @@ main:
     - js/dataTables.searchBuilder-1.7.1.min.js
     - js/jquery.csv-1.0.21.min.js
     - js/plotly.2.31.1.min.js
-    - js/datacomparison.js
+    - js/dataexplorer.js
+
+comparison:
+  output: datacomparison/%(version)s_datacomparison.js
+  extra:
+    preload:
+      - base/main
+      - datacomparison/main-css
+      - datacomparison/main
+  contents:
+        - js/datacomparison.js
