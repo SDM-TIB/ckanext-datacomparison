@@ -2,7 +2,7 @@ const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
 let height_searchBuilder;
 
-function openTab(evt, tabName) {
+function openTab(ele, tabName) {
     let i, tabcontent, tablinks;
 
     // Get all elements with class="tabcontent" and hide them
@@ -19,7 +19,7 @@ function openTab(evt, tabName) {
 
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(tabName).style.display = 'block';
-    evt.currentTarget.className += ' active';
+    ele.className += ' active';
 }
 
 document.getElementById('defaultOpen').click();  // open default tab
