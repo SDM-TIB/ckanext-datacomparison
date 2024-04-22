@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.4.3 - 2024-04-22
+- Adjust height of iFrame when adding resources to the comparison
+
 # v0.4.2 - 2024-04-17
 - Update dependencies
 - Use jQuery from CKAN instance
