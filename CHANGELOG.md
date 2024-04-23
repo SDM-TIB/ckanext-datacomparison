@@ -1,5 +1,13 @@
 # Changelog
 
+# v0.5.0 - 2024-04-23
+- Split JavaScript code for the two view plugins
+- Preload `vendor/jquery` instead of `base/main`
+- Fix deprecated passing of the event in event handling
+- Replace AJAX with the fetch API
+- Replace jquery-csv with Papa Parse
+- Remove usage of jQuery where possible
+
 # v0.4.3 - 2024-04-22
 - Adjust height of iFrame when adding resources to the comparison
 
