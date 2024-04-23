@@ -122,7 +122,7 @@ function loadData() {
         fetch(data_package['resources'][0]['path'])
             .then(res => res.text())
             .then(data => {
-               data_ = $.csv.toArrays(data);
+               data_ = Papa.parse(data, { skipEmptyLines: 'greedy' }).data;
                columns = data_.shift();
 
                 updateUI();

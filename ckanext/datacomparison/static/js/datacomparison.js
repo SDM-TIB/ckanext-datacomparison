@@ -91,8 +91,8 @@ new_resource.on('submit', function(event) {
     fetch(res_new)
         .then(res => res.text())
         .then(data => {
-            let data_new = $.csv.toArrays(data);
-            let columns_new = data_new.shift();
+            let data_new = Papa.parse(data, { skipEmptyLines: 'greedy' }).data,
+                columns_new = data_new.shift();
             for (let i = 1; i < columns_new.length; i++) { columns_new[i] = columns_new[i] + res_new_label }
 
             const intersection = columns.filter(value => columns_new.includes(value));

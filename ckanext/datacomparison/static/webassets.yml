@@ -14,7 +14,7 @@ main:
   contents:
     - js/dataTables-2.0.4.min.js
     - js/dataTables.searchBuilder-1.7.1.min.js
-    - js/jquery.csv-1.0.21.min.js
+    - js/papaparse-5.0.2.min.js
     - js/plotly.2.31.1.min.js
     - js/dataexplorer.js
 
@@ -26,4 +26,4 @@ comparison:
       - datacomparison/main-css
       - datacomparison/main
   contents:
-        - js/datacomparison.js
+    - js/datacomparison.js
