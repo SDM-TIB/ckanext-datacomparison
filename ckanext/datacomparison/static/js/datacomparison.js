@@ -42,13 +42,13 @@ details.addEventListener('toggle', details_height_update);
 
 function addNewResourceForm() {
     num_resources += 1;
-    const submit_btn = $('#dataset_submit');
+    const submit_btn = document.getElementById('dataset_submit');
     submit_btn.remove();
 
     for (let i = 2; i < num_resources; i++) {
         // prevent changes to previous resources since they would be ignored
-        $('#res' + i + 'label').prop('disabled', 'true');
-        if (i > 1) { $('#res' + i).prop('disabled', 'true') }
+        document.getElementById('res' + i + 'label').disabled = true;
+        if (i > 1) { document.getElementById('res' + i).disabled = true }
     }
 
     const new_label_id = 'res' + num_resources + 'label',
@@ -65,28 +65,28 @@ function addNewResourceForm() {
     new_resource.append(createLabel('URL:', new_url_id, classes_label));
     let input_url = createInput(new_url_id, 'text', 'URL for file', classes_input_resources, true, 80);
     input_url.setAttribute('list', 'resource_list');
-    input_url.oninput = function() { return populateSearchBar($(this).val()) };
+    input_url.oninput = function() { return populateSearchBar(this.value) };
     new_resource.append(input_url);
     new_resource.append(submit_btn);
 
     details_height_update();
 }
 
-let num_resources = 2;
-const new_resource = $('#datasets');
-let resource_list = $('#resource_list');
-$('#res2').on('input', function() { return populateSearchBar($(this).val()) });
-new_resource.on('submit', function(event) {
+let num_resources = 2,
+    resource_list = document.getElementById('resource_list');
+const new_resource = document.getElementById('datasets');
+document.getElementById('res2').oninput = function() { return populateSearchBar(this.value) };
+new_resource.onsubmit = function(event) {
     event.preventDefault();
 
     if (num_resources === 2) {
-        const elem_res1_label = $('#res1label'),
-              res1_label = ' (' + elem_res1_label.val() + ')';
+        const elem_res1_label = document.getElementById('res1label'),
+              res1_label = ' (' + elem_res1_label.value + ')';
         for (let i = 1; i < columns.length; i++) { columns[i] = columns[i] + res1_label }
-        elem_res1_label.prop('disabled', 'true');
+        elem_res1_label.disabled = true;
     }
-    const res_new = $('#res' + num_resources).val(),
-          res_new_label = ' (' + $('#res' + num_resources + 'label').val() + ')';
+    const res_new = document.getElementById('res' + num_resources).value,
+          res_new_label = ' (' + document.getElementById('res' + num_resources + 'label').value + ')';
 
     fetch(res_new)
         .then(res => res.text())
@@ -146,10 +146,10 @@ new_resource.on('submit', function(event) {
         })
         .catch(err => console.error(err))
         .then(_ => updateUI());
-})
+};
 
 function populateSearchBar(name) {
-    resource_list.empty();
+    resource_list.replaceChildren();
     if (name.length < 3) { return; }  // start searching for resources from three letters
 
     fetch(data_package['api'] + '?query=name:' + name)

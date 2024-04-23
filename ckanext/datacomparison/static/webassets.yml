@@ -22,8 +22,6 @@ comparison:
   output: datacomparison/%(version)s_datacomparison.js
   extra:
     preload:
-      - vendor/jquery
-      - datacomparison/main-css
       - datacomparison/main
   contents:
     - js/datacomparison.js

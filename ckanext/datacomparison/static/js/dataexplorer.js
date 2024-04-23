@@ -28,13 +28,13 @@ function getHeight(element) {
     return parseFloat(getComputedStyle(element).height.slice(0, -2))
 }
 
-const chart_builder = $('#chartBuilder');
-chart_builder.on('submit', function(event) {
+const chart_builder = document.getElementById('chartBuilder');
+chart_builder.onsubmit = function(event) {
     event.preventDefault();
-    $('#guidingText').hide();
+    document.getElementById('guidingText').style.display = 'none';
 
-    const chart_type = $('#chartType').val(),
-          group_column = columns.indexOf($('#xAxis').val()),
+    const chart_type = document.getElementById('chartType').value,
+          group_column = columns.indexOf(document.getElementById('xAxis').value),
           checked_inputs_yAxis = document.querySelectorAll('input[name=yAxis]:checked');
 
     const data_xAxis = arrayColumn(data_, group_column);
@@ -79,7 +79,7 @@ chart_builder.on('submit', function(event) {
         }
     }
     let layout = { hovermode: 'x unified', xaxis: data_xAxis };
-    if ($('#logScale').is(':checked')) {
+    if (document.getElementById('logScale').checked) {
         layout['yaxis'] = {
             type: 'log',
             autorange: true
@@ -87,7 +87,7 @@ chart_builder.on('submit', function(event) {
     }
 
     Plotly.newPlot('gd', traces, layout, { displaylogo: false, responsive: true });
-});
+}
 
 let data_explorer = document.getElementById('data-explorer-comparison'),
     data_package = JSON.parse(data_explorer.dataset.datapackage);
@@ -97,7 +97,7 @@ let columns = null,
 const xAxis = document.getElementById('xAxis'),
       yAxis = document.getElementById('yAxis');
 
-function setNumberRows(count) { $('#totalRows').text('Total rows: ' + count) }
+function setNumberRows(count) { document.getElementById('totalRows').innerText = 'Total rows: ' + count }
 
 function loadData() {
     if ('api' in data_package['resources'][0]) {
@@ -140,10 +140,9 @@ function updateUI() {
     let colDef = [];
     for (const j in columns) { colDef.push({ title: columns[j] }) }
 
-    if ($.fn.DataTable.isDataTable('#comparison-table')) {
-        const comparison_table = $('#comparison-table');
-        comparison_table.DataTable().clear().destroy();
-        comparison_table.html('');
+    if (DataTable.isDataTable('#comparison-table')) {
+        new DataTable.Api('#comparison-table').clear().destroy();
+        document.getElementById('comparison-table').innerHTML = '';
     }
     new DataTable('#comparison-table', {
         destroy: true,
@@ -161,7 +160,7 @@ function updateUI() {
 }
 
 function initChartBuilder() {
-    $('#xAxis').empty();
+    xAxis.replaceChildren();
     yAxis.replaceChildren();
 
     for (let i = 0; i < columns.length; i++) {
