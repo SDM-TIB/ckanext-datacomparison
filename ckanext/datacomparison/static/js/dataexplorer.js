@@ -100,15 +100,10 @@ const xAxis = document.getElementById('xAxis'),
 function setNumberRows(count) { $('#totalRows').text('Total rows: ' + count) }
 
 function loadData() {
-    let error = false;
     if ('api' in data_package['resources'][0]) {
-        const request_url = data_package['resources'][0]['api'];
-        $.ajax({
-            async: false,
-            type: 'GET',
-            url: request_url,
-            crossDomain: true,
-            success: function(data) {
+        fetch(data_package['resources'][0]['api'])
+            .then(res => res.json())
+            .then(data => {
                 let records = data.result.records;
                 for (let i = 0; i < records.length; i++) {
                     const record = records[i];
@@ -117,38 +112,24 @@ function loadData() {
                     data_.push(values)
                     if (i === 0) { columns = Object.keys(record); }
                 }
-
                 columns.shift();  // removing the _id column
-            },
-            error: function(jqXHR, textStatus) {
-                error = true;
-                console.log(jqXHR.status);
-                console.log(jqXHR.responseText);
-                console.log(textStatus);
-            }
-        });
-    } else {
-        const dataset_path = data_package['resources'][0]['path'];
-        $.ajax({
-            async: false,
-            type: 'GET',
-            url: dataset_path,
-            crossDomain: true,
-            success: function(data) {
-                data_ = $.csv.toArrays(data);
-                columns = data_.shift();
-            },
-            error: function(jqXHR, textStatus) {
-                error = true;
-                console.log(jqXHR.status);
-                console.log(jqXHR.responseText);
-                console.log(textStatus);
-            }
-        });
-    }
 
-    if (!error) { updateUI() }
-    height_searchBuilder = getHeight(document.getElementsByClassName('dtsb-group').item(0));
+                updateUI();
+                height_searchBuilder = getHeight(document.getElementsByClassName('dtsb-group').item(0));
+            })
+            .catch(err => console.error(err));
+    } else {
+        fetch(data_package['resources'][0]['path'])
+            .then(res => res.text())
+            .then(data => {
+               data_ = $.csv.toArrays(data);
+               columns = data_.shift();
+
+                updateUI();
+                height_searchBuilder = getHeight(document.getElementsByClassName('dtsb-group').item(0));
+            })
+            .catch(err => console.error(err));
+    }
 }
 loadData();
 

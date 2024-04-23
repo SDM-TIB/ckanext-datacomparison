@@ -88,12 +88,9 @@ new_resource.on('submit', function(event) {
     const res_new = $('#res' + num_resources).val(),
           res_new_label = ' (' + $('#res' + num_resources + 'label').val() + ')';
 
-    $.ajax({
-        async: false,
-        type: 'GET',
-        url: res_new,
-        crossDomain: true,
-        success: function(data) {
+    fetch(res_new)
+        .then(res => res.text())
+        .then(data => {
             let data_new = $.csv.toArrays(data);
             let columns_new = data_new.shift();
             for (let i = 1; i < columns_new.length; i++) { columns_new[i] = columns_new[i] + res_new_label }
@@ -146,44 +143,28 @@ new_resource.on('submit', function(event) {
             } else {
                 console.log('There is either no or several matching column(s).')
             }
-        },
-        error: function(jqXHR, textStatus) {
-            console.log(jqXHR.status);
-            console.log(jqXHR.responseText);
-            console.log(textStatus);
-        }
-    });
-    updateUI();
+        })
+        .catch(err => console.error(err))
+        .then(_ => updateUI());
 })
-
-let resource_data = [];
-function getResourcesByName(name) {
-    resource_data = [];
-    if (name.length < 3) { return; }  // start searching for resources from three letters
-    $.ajax({
-        async: false,
-        type: 'GET',
-        url: data_package['api'] + '?query=name:' + name,
-        success: function (data) {
-            if (data['success']) { resource_data = data['result']['results']; }
-        },
-        error: function (jqXHR, textStatus) {
-            console.log(jqXHR.status);
-            console.log(jqXHR.responseText);
-            console.log(textStatus);
-        }
-    });
-}
 
 function populateSearchBar(name) {
     resource_list.empty();
-    getResourcesByName(name);
+    if (name.length < 3) { return; }  // start searching for resources from three letters
 
-    resource_data.forEach((res) => {
-        let option = document.createElement('option');
-        option.value = res['url'];
-        option.innerText = res['name'];
-        if (res['description']) { option.innerText += ': ' + res['description'] }
-        resource_list.append(option);
-    })
+    fetch(data_package['api'] + '?query=name:' + name)
+        .then(res => res.json())
+        .then(data => {
+            if (data['success']) {
+                const resource_data = data['result']['results'];
+                resource_data.forEach((res) => {
+                    let option = document.createElement('option');
+                    option.value = res['url'];
+                    option.innerText = res['name'];
+                    if (res['description']) { option.innerText += ': ' + res['description'] }
+                    resource_list.append(option);
+                })
+            }
+        })
+        .catch(err => console.error(err));
 }
