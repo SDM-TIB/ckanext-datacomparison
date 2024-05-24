@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.5.1 - 2024-05-24
+- Update the label of the button for chart generation
+
 # v0.5.0 - 2024-04-23
 - Split JavaScript code for the two view plugins
 - Preload `vendor/jquery` instead of `base/main`
