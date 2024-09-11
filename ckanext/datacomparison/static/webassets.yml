@@ -15,7 +15,7 @@ main:
     - js/dataTables-2.1.6.min.js
     - js/dataTables.searchBuilder-1.8.0.min.js
     - js/papaparse-5.4.1.min.js
-    - js/plotly-2.35.1.min.js
+    - js/plotly-2.35.2.min.js
     - js/dataexplorer.js
 
 comparison:
