@@ -30,6 +30,27 @@ pip install -r ./ckanext-fedorkg/requirements.txt
 
 Afterward, add `datacomparison_view` and/or `datacomparison_explorer_view` to the plugins in your `ckan.ini`.
 
+## Development
+
+**Prerequisites:**
+
+- make 4.1 or newer
+- Python3 (including pip)
+- npm 7.0 or newer
+
+The JavaScript and CSS dependencies are handled using `npm`.
+You can check the dependencies for updates by executing
+
+```bash
+make outdated
+```
+
+After changing the version number in `package.json`, execute the following command in order to install the updates and bundle the updated dependencies
+
+```bash
+make install && make bundle
+```
+
 ## Changelog
 
 If you are interested in what has changed, check out the [changelog](CHANGELOG.md).
