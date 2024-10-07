@@ -2,8 +2,8 @@
   "dependencies": {
     "datatables.net": "2.1.8",
     "datatables.net-dt": "2.1.8",
-    "datatables.net-searchbuilder": "1.8.0",
-    "datatables.net-searchbuilder-dt": "1.8.0",
+    "datatables.net-searchbuilder": "1.8.1",
+    "datatables.net-searchbuilder-dt": "1.8.1",
     "papaparse": "5.4.1",
     "plotly.js": "2.35.2"
   }
