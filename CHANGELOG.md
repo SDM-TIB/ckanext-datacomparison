@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.5.4 - 2025-01-10
+- Update dependencies
+
 # v0.5.3 - 2024-08-22
 - Update dependencies
 
