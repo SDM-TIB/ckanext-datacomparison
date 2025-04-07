@@ -45,14 +45,23 @@
                                     <select class="w-full mt-1 py-2 px-2 pr-8 block border rounded border-gray-200 leading-tight bg-gray-200 focus:outline-none focus:bg-white focus:border-gray-500" id="xAxis" name="xAxis" required></select>
                                 </div>
                             </div>
-                            <div class="w-full">
+                            <div class="w-full mb-3">
                                 <label class="text-white font-bold text-xs" for="yAxis">Series</label>
                                 <div id="yAxis" role="group"></div>
                             </div>
-                            <div class="w-full mb-3">
+                            <div class="w-full">
+                                <div class="text-white font-bold text-xs">Plot Options</div>
+                            </div>
+                            <div class="w-full">
                                 <label class="block font-bold text-white">
                                     <input class="ml-0 mr-2 leading-tight" type="checkbox" id="logScale" name="logScale" value="log">
                                     <span class="text-xs">Use log scale for y-axis</span>
+                                </label>
+                            </div>
+                            <div class="w-full mb-3">
+                                <label class="block font-bold text-white">
+                                    <input class="ml-0 mr-2 leading-tight" type="checkbox" id="filteredData" name="filteredData" value="filter" checked>
+                                    <span class="text-xs">Use table filters for plot data</span>
                                 </label>
                             </div>
                             <div class="w-full mt-2 mb-3">

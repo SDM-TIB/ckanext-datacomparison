@@ -37,8 +37,11 @@ chart_builder.onsubmit = function(event) {
           group_column = columns.indexOf(document.getElementById('xAxis').value),
           checked_inputs_yAxis = document.querySelectorAll('input[name=yAxis]:checked');
 
-    let table_elem = $('#comparison-table').DataTable();
-    data_ = table_elem.rows({ filter: 'applied' }).data().toArray();
+    let _data = data_
+    if (document.getElementById('filteredData').checked) {
+        let table_elem = $('#comparison-table').DataTable();
+        _data = table_elem.rows({filter: 'applied'}).data().toArray();
+    }
 
     const data_xAxis = arrayColumn(data_, group_column);
     let traces = [];
@@ -50,7 +53,7 @@ chart_builder.onsubmit = function(event) {
             case 'line':
                 traces.push({
                     x: data_xAxis,
-                    y: arrayColumn(data_, dataset_idx),
+                    y: arrayColumn(_data, dataset_idx),
                     name: dataset_name,
                     type: 'scatter',
                     mode: 'lines',
@@ -63,7 +66,7 @@ chart_builder.onsubmit = function(event) {
             case 'scatter':
                 traces.push({
                     x: data_xAxis,
-                    y: arrayColumn(data_, dataset_idx),
+                    y: arrayColumn(_data, dataset_idx),
                     name: dataset_name,
                     type: 'scatter',
                     mode: 'markers'
@@ -72,7 +75,7 @@ chart_builder.onsubmit = function(event) {
             case 'bar':
                 traces.push({
                     x: data_xAxis,
-                    y: arrayColumn(data_, dataset_idx),
+                    y: arrayColumn(_data, dataset_idx),
                     name: dataset_name,
                     type: 'bar'
                 });
