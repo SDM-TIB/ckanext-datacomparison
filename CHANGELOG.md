@@ -1,5 +1,11 @@
 # Changelog
 
+# v0.6.0 - 2025-04-07
+- Enable to use the data from the filtered table for the plot
+- Add option for filtered or whole data
+- Group _log scale_ and _filtered data_ in _Plot Options_
+- Update dependencies
+
 # v0.5.4 - 2025-01-10
 - Update dependencies
 
