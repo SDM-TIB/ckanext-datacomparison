@@ -37,6 +37,9 @@ chart_builder.onsubmit = function(event) {
           group_column = columns.indexOf(document.getElementById('xAxis').value),
           checked_inputs_yAxis = document.querySelectorAll('input[name=yAxis]:checked');
 
+    let table_elem = $('#comparison-table').DataTable();
+    data_ = table_elem.rows({ filter: 'applied' }).data().toArray();
+
     const data_xAxis = arrayColumn(data_, group_column);
     let traces = [];
     for (let i = 0; i < checked_inputs_yAxis.length; i++) {
