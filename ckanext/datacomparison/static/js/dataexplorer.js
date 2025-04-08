@@ -43,7 +43,7 @@ chart_builder.onsubmit = function(event) {
         _data = table_elem.rows({filter: 'applied'}).data().toArray();
     }
 
-    const data_xAxis = arrayColumn(data_, group_column);
+    const data_xAxis = arrayColumn(_data, group_column);
     let traces = [];
     for (let i = 0; i < checked_inputs_yAxis.length; i++) {
         const dataset_name = checked_inputs_yAxis[i].value,
