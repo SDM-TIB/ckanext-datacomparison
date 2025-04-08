@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.6.1 - 2025-04-08
+- Fix x-axis labels when using filtered data
+
 # v0.6.0 - 2025-04-07
 - Enable to use the data from the filtered table for the plot
 - Add option for filtered or whole data
