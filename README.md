@@ -20,12 +20,12 @@ The following view plugins are part of `ckanext-datacomparison`:
 
 ## Installation
 
-As usual for CKAN extensions, you can install `ckanext-fedorkg` as follows:
+As usual for CKAN extensions, you can install `ckanext-datacomparison` as follows:
 
 ```bash
 git clone git@github.com:SDM-TIB/ckanext-datacomparison.git
 pip install -e ./ckanext-datacomparison
-pip install -r ./ckanext-fedorkg/requirements.txt
+pip install -r ./ckanext-datacomparison/requirements.txt
 ```
 
 Afterward, add `datacomparison_view` and/or `datacomparison_explorer_view` to the plugins in your `ckan.ini`.
