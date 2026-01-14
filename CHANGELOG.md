@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.6.2 - 2026-01-14
+- Update dependencies
+
 # v0.6.1 - 2025-04-08
 - Fix x-axis labels when using filtered data
 
