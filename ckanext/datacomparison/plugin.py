@@ -107,7 +107,7 @@ def in_list(list_possible_values):
     return validate
 
 
-class BaseViewMixin(p.SingletonPlugin):
+class BaseViewMixin:
 
     # IConfigurer
     def update_config(self, config_):
