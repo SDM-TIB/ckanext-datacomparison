@@ -107,39 +107,6 @@ def in_list(list_possible_values):
     return validate
 
 
-def can_view_resource(data_dict):
-    resource = data_dict['resource']
-
-    if (resource.get('datastore_active') or
-            '_datastore_only_resource' in resource.get('url', '')):
-        return True
-    resource_format = resource.get('format', None)
-    if resource_format:
-        return resource_format.lower() in ['csv', 'xls', 'xlsx', 'tsv']
-    else:
-        return False
-
-
-def _setup_template_variables(context, data_dict):
-    data_dict['resource'].update({
-        'title': data_dict['resource']['name'],
-        'path': data_dict['resource']['url'],
-    })
-
-    if data_dict['resource'].get('datastore_active'):
-        schema = datastore_fields_to_schema(data_dict['resource'])
-        data_dict['resource'].update({
-            'schema': {'fields': schema},
-            'api': url_for('api.action', ver=3, logic_function='datastore_search',
-                           resource_id=data_dict['resource']['id'], _external=True),
-        })
-
-    return {
-        'api': url_for('api.action', ver=3, logic_function='resource_search', _external=True),
-        'resources': [data_dict['resource']]
-    }
-
-
 class BaseViewMixin(p.SingletonPlugin):
 
     # IConfigurer
@@ -149,10 +116,35 @@ class BaseViewMixin(p.SingletonPlugin):
         toolkit.add_resource('static', 'datacomparison')
 
     def setup_template_variables(self, context, data_dict):
-        return _setup_template_variables(context, data_dict)
+        data_dict['resource'].update({
+            'title': data_dict['resource']['name'],
+            'path': data_dict['resource']['url'],
+        })
+
+        if data_dict['resource'].get('datastore_active'):
+            schema = datastore_fields_to_schema(data_dict['resource'])
+            data_dict['resource'].update({
+                'schema': {'fields': schema},
+                'api': url_for('api.action', ver=3, logic_function='datastore_search',
+                               resource_id=data_dict['resource']['id'], _external=True),
+            })
+
+        return {
+            'api': url_for('api.action', ver=3, logic_function='resource_search', _external=True),
+            'resources': [data_dict['resource']]
+        }
 
     def can_view(self, data_dict):
-        return can_view_resource(data_dict)
+        resource = data_dict['resource']
+
+        if (resource.get('datastore_active') or
+                '_datastore_only_resource' in resource.get('url', '')):
+            return True
+        resource_format = resource.get('format', None)
+        if resource_format:
+            return resource_format.lower() in ['csv', 'xls', 'xlsx', 'tsv']
+        else:
+            return False
 
     def get_helpers(self):
         return {}
