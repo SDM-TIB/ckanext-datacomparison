@@ -142,10 +142,6 @@ def _setup_template_variables(context, data_dict):
 
 class BaseViewMixin(p.SingletonPlugin):
 
-    # IConfigurable
-    def configure(self, config):
-        toolkit.add_resource('static', 'datacomparison')
-
     # IConfigurer
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
@@ -165,7 +161,6 @@ class BaseViewMixin(p.SingletonPlugin):
 class DataComparisonView(BaseViewMixin, p.SingletonPlugin):
     """This extension provides views capable of comparing resources."""
     p.implements(p.IConfigurer, inherit=True)
-    p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IResourceView, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
 
@@ -185,7 +180,6 @@ class DataComparisonView(BaseViewMixin, p.SingletonPlugin):
 class DataExplorerView(BaseViewMixin, p.SingletonPlugin):
     """This extension provides a simple data explorer for a single resource."""
     p.implements(p.IConfigurer, inherit=True)
-    p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IResourceView, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
 
