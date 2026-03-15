@@ -139,14 +139,8 @@ def _setup_template_variables(context, data_dict):
         'resources': [data_dict['resource']]
     }
 
-class DataComparisonView(p.SingletonPlugin):
-    """
-        This extension provides views capable of comparing resources.
-    """
-    p.implements(p.IConfigurable, inherit=True)
-    p.implements(p.IConfigurer, inherit=True)
-    p.implements(p.IResourceView, inherit=True)
-    p.implements(p.ITemplateHelpers, inherit=True)
+
+class BaseViewMixin(p.SingletonPlugin):
 
     # IConfigurable
     def configure(self, config):
@@ -157,6 +151,23 @@ class DataComparisonView(p.SingletonPlugin):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('static', 'datacomparison')
+
+    def setup_template_variables(self, context, data_dict):
+        return _setup_template_variables(context, data_dict)
+
+    def can_view(self, data_dict):
+        return can_view_resource(data_dict)
+
+    def get_helpers(self):
+        return {}
+
+
+class DataComparisonView(BaseViewMixin, p.SingletonPlugin):
+    """This extension provides views capable of comparing resources."""
+    p.implements(p.IConfigurer, inherit=True)
+    p.implements(p.IConfigurable, inherit=True)
+    p.implements(p.IResourceView, inherit=True)
+    p.implements(p.ITemplateHelpers, inherit=True)
 
     def info(self):
         return {
@@ -167,37 +178,16 @@ class DataComparisonView(p.SingletonPlugin):
             'default_title': p.toolkit._('Data Comparison'),
         }
 
-    def setup_template_variables(self, context, data_dict):
-        return _setup_template_variables(context, data_dict)
-
-    def can_view(self, data_dict):
-        return can_view_resource(data_dict)
-
-    def get_helpers(self):
-        return {}
-
     def view_template(self, context, data_dict):
         return 'datacomparison.jinja2'
 
 
-class DataExplorerView(p.SingletonPlugin):
-    """
-        This extension provides a simple data explorer for a single resource.
-    """
-    p.implements(p.IConfigurable, inherit=True)
+class DataExplorerView(BaseViewMixin, p.SingletonPlugin):
+    """This extension provides a simple data explorer for a single resource."""
     p.implements(p.IConfigurer, inherit=True)
+    p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IResourceView, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
-
-    # IConfigurable
-    def configure(self, config):
-        toolkit.add_resource('static', 'datacomparison')
-
-    # IConfigurer
-    def update_config(self, config_):
-        toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('static', 'datacomparison')
 
     def info(self):
         return {
@@ -207,15 +197,6 @@ class DataExplorerView(p.SingletonPlugin):
             'requires_datastore': False,
             'default_title': p.toolkit._('Data Explorer (TIB-SDM)'),
         }
-
-    def setup_template_variables(self, context, data_dict):
-        return _setup_template_variables(context, data_dict)
-
-    def can_view(self, data_dict):
-        return can_view_resource(data_dict)
-
-    def get_helpers(self):
-        return {}
 
     def view_template(self, context, data_dict):
         return 'dataexplorer.jinja2'
