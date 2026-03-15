@@ -7,7 +7,7 @@
         <div class="mb-3 py-2">
             <form id="datasets">
                 <b>Original Resource</b><br>
-                <label class="mr-2 text-xs required" for="res1label">Label:</label><input class="mr-4" style="border: 1px solid #aaa; border-radius: 3px;" type="text" id="res1label" name="res1label" size="12" placeholder="name" required>
+                <label class="mr-2 text-xs required" for="res1label">Label:</label><input class="mr-4 rounded-input" type="text" id="res1label" name="res1label" size="12" placeholder="name" required>
                 <br><br>
                 <b>Resource 2</b><br>
                 <label class="mr-2 text-xs required" for="res2label">Label:</label><input class="mr-4 rounded-input" type="text" id="res2label" name="res2label" size="12" placeholder="name" required><label class="mr-2 text-xs required" for="res2">URL:</label><input class="mr-4 rounded-input" type="text" id="res2" name="res2" size="80" placeholder="URL for file" required list="resource_list">
@@ -16,4 +16,28 @@
             </form>
         </div>
     </details>
+
+    <!-- Join column modal (hidden until needed) -->
+    <div id="join-modal-backdrop" class="join-modal-backdrop" style="display: none;">
+        <div class="join-modal">
+            <p class="join-modal-title">Select join columns</p>
+            <!-- Shown for resource 2: user picks which existing column to join on -->
+            <div id="join-modal-old-select-wrapper" class="join-modal-field">
+                <label for="join_col_old_select">Column from Original Resource:</label>
+                <select id="join_col_old_select" class="join-modal-select"></select>
+            </div>
+            <!-- Shown for resource 3+: established join key displayed as read-only -->
+            <div id="join-modal-old-info" class="join-modal-info" style="display: none;">
+                Column from Original Resource: <b id="join-modal-old-info-text"></b>
+            </div>
+            <div class="join-modal-field">
+                <label id="join-modal-new-label" for="join_col_new_select">Column from Resource 2:</label>
+                <select id="join_col_new_select" class="join-modal-select"></select>
+            </div>
+            <div class="join-modal-btn-row">
+                <button type="button" id="join-modal-cancel" class="join-modal-cancel font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">Cancel</button>
+                <button type="button" id="join-modal-confirm" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline">Confirm</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
