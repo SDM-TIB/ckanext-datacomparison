@@ -132,12 +132,39 @@ function applyJoin(data_new, columns_new_raw, join_col_old, join_col_new, res_ne
     updateUI();
 }
 
+// Returns up to n non-empty values from a column in a 2D data array.
+function getSamples(data, colIndex, n = 5) {
+    const samples = [];
+    for (let i = 0; i < data.length && samples.length < n; i++) {
+        const val = data[i][colIndex];
+        if (val !== null && val !== undefined && val !== '') {
+            samples.push(val);
+        }
+    }
+    return samples;
+}
+
+// Renders sample value pills into a target element.
+function renderSamples(samples, targetEl) {
+    targetEl.replaceChildren();
+    samples.forEach(val => {
+        let pill = document.createElement('span');
+        pill.classList.add('join-modal-sample-pill');
+        pill.innerText = val;
+        pill.title = val;  // show full value on hover if truncated
+        targetEl.append(pill);
+    });
+}
+
 function showJoinPicker(data_new, columns_new_raw, res_new_label) {
     const backdrop = document.getElementById('join-modal-backdrop'),
           select_old = document.getElementById('join_col_old_select'),
           select_new = document.getElementById('join_col_new_select'),
           old_select_wrapper = document.getElementById('join-modal-old-select-wrapper'),
-          old_info = document.getElementById('join-modal-old-info');
+          old_info = document.getElementById('join-modal-old-info'),
+          old_samples_el = document.getElementById('join-modal-old-samples'),
+          old_fixed_samples_el = document.getElementById('join-modal-old-fixed-samples'),
+          new_samples_el = document.getElementById('join-modal-new-samples');
 
     // Populate the selects with current column options
     select_old.replaceChildren();
@@ -156,18 +183,36 @@ function showJoinPicker(data_new, columns_new_raw, res_new_label) {
         select_new.add(opt);
     });
 
-    // Toggle left-side state
+    // Toggle left-side state and render samples for the old resource
     if (num_resources === 2) {
         old_select_wrapper.style.display = '';
         old_info.style.display = 'none';
+        // Show samples for whichever column is currently selected, update on change
+        const refreshOldSamples = () => {
+            const idx = columns.indexOf(select_old.value);
+            renderSamples(getSamples(data_, idx), old_samples_el);
+        };
+        refreshOldSamples();
+        select_old.onchange = refreshOldSamples;
     } else {
         old_select_wrapper.style.display = 'none';
         old_info.style.display = '';
         document.getElementById('join-modal-old-info-text').innerText = join_column_name;
+        // Fixed column — render samples once, no change handler needed
+        const idx = columns.indexOf(join_column_name);
+        renderSamples(getSamples(data_, idx), old_fixed_samples_el);
     }
 
     // Update the new-resource label to reflect the current resource number
     document.getElementById('join-modal-new-label').innerText = 'Column from Resource ' + num_resources + ':';
+
+    // Show samples for the new resource's selected column, update on change
+    const refreshNewSamples = () => {
+        const idx = columns_new_raw.indexOf(select_new.value);
+        renderSamples(getSamples(data_new, idx), new_samples_el);
+    };
+    refreshNewSamples();
+    select_new.onchange = refreshNewSamples;
 
     // Wire up buttons (onclick assignment replaces any previous handler)
     document.getElementById('join-modal-cancel').onclick = function() {
@@ -185,8 +230,8 @@ function showJoinPicker(data_new, columns_new_raw, res_new_label) {
 
 let num_resources = 2,
     resource_list = document.getElementById('resource_list'),
-    join_column_name = null,  // tracks the established join key across all resources
-    new_resource = document.getElementById('datasets');
+    join_column_name = null;  // tracks the established join key across all resources
+const new_resource = document.getElementById('datasets');
 document.getElementById('res2').oninput = function() { return populateSearchBar(this.value) };
 new_resource.onsubmit = function(event) {
     event.preventDefault();
