@@ -1,5 +1,10 @@
 # Changelog
 
+# v0.7.0 - 2026-06-26
+- Add modal for join column selection including value preview
+- Reorganize code
+- Update dependencies
+
 # v0.6.2 - 2026-01-14
 - Update dependencies
 
