@@ -4,7 +4,7 @@
     "datatables.net-dt": "2.3.8",
     "datatables.net-searchbuilder": "1.8.4",
     "datatables.net-searchbuilder-dt": "1.8.4",
-    "papaparse": "5.5.3",
+    "papaparse": "5.5.4",
     "plotly.js": "3.6.0"
   }
 }
