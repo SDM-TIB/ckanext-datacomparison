@@ -105,21 +105,31 @@ chart_builder.onsubmit = function(event) {
     Plotly.newPlot('gd', traces, layout, {
         displaylogo: false,
         responsive: true,
-        toImageButtonOptions: {
-            format: 'png',
-            scale: 2
-        },
-        modeBarButtonsToAdd: [
-            {
-                name: 'Download plot as an SVG',
-                icon: icon_svg,
-                click: function(gd) {
-                    Plotly.downloadImage(gd, { format: 'svg' });
+        modeBarButtons: [
+            [
+                {
+                    name: 'Download PNG',
+                    title: 'Download plot as PNG',
+                    icon: Plotly.Icons.camera,
+                    click: function(gd) {
+                        Plotly.downloadImage(gd, {
+                            format: 'png',
+                            scale: 2
+                        });
+                    }
+                },
+                {
+                    name: 'Download SVG',
+                    title: 'Download plot as SVG',
+                    icon: icon_svg,
+                    click: function(gd) {
+                        Plotly.downloadImage(gd, { format: 'svg' });
+                    }
                 }
-            }
-        ],
-
-        modeBarButtonsToRemove: ['sendChartToCloud']
+            ],
+            ['zoom2d', 'pan2d'],
+            ['zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d']
+        ]
     });
 }
 
