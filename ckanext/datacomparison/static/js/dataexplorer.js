@@ -92,7 +92,11 @@ chart_builder.onsubmit = function(event) {
         }
     }
 
-    Plotly.newPlot('gd', traces, layout, { displaylogo: false, responsive: true });
+    Plotly.newPlot('gd', traces, layout, {
+        displaylogo: false,
+        responsive: true,
+        modeBarButtonsToRemove: ['sendChartToCloud']
+    });
 }
 
 let data_explorer = document.getElementById('data-explorer-comparison'),
