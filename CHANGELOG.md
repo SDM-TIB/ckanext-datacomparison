@@ -1,5 +1,10 @@
 # Changelog
 
+# v0.8.0 - 2026-08-25
+- Increase size of downloaded plot (PNG format)
+- Add option to download plot as SVG
+- Update dependencies
+
 # v0.7.0 - 2026-06-26
 - Add modal for join column selection including value preview
 - Reorganize code
