@@ -92,6 +92,16 @@ chart_builder.onsubmit = function(event) {
         }
     }
 
+    const icon_svg = {
+        width: 24,
+        height: 24,
+        path: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z' +
+              'M13 3.5L18.5 9H13V3.5z' +
+              'M12 17l-4-4h2.5v-4h3v4H16l-4 4z',
+        ascent: 24,
+        descent: 0
+    };
+
     Plotly.newPlot('gd', traces, layout, {
         displaylogo: false,
         responsive: true,
@@ -99,6 +109,16 @@ chart_builder.onsubmit = function(event) {
             format: 'png',
             scale: 2
         },
+        modeBarButtonsToAdd: [
+            {
+                name: 'Download plot as an SVG',
+                icon: icon_svg,
+                click: function(gd) {
+                    Plotly.downloadImage(gd, { format: 'svg' });
+                }
+            }
+        ],
+
         modeBarButtonsToRemove: ['sendChartToCloud']
     });
 }
