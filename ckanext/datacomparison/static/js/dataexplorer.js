@@ -95,6 +95,10 @@ chart_builder.onsubmit = function(event) {
     Plotly.newPlot('gd', traces, layout, {
         displaylogo: false,
         responsive: true,
+        toImageButtonOptions: {
+            format: 'png',
+            scale: 2
+        },
         modeBarButtonsToRemove: ['sendChartToCloud']
     });
 }
