@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.8.1 - 2026-11-18
+- Update dependencies
+
 # v0.8.0 - 2026-08-25
 - Increase size of downloaded plot (PNG format)
 - Add option to download plot as SVG
