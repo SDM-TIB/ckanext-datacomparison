@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "datatables.net": "3.1.5",
-    "datatables.net-dt": "3.1.5",
+    "datatables.net": "3.1.6",
+    "datatables.net-dt": "3.1.6",
     "datatables.net-searchbuilder": "2.1.1",
     "datatables.net-searchbuilder-dt": "2.1.1",
     "papaparse": "5.7.1",
